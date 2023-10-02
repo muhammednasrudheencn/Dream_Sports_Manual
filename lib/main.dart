@@ -1,4 +1,4 @@
-import 'package:dream_sports_turf_owner/screens/start/screen_register.dart';
+import 'package:dream_sports_turf_owner/screens/registeration/screen_register.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

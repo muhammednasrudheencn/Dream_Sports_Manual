@@ -1,6 +1,6 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
+import 'package:dream_sports_turf_owner/screens/registeration/screen_register.dart';
 import 'package:dream_sports_turf_owner/screens/start/screen_authentication.dart';
-import 'package:dream_sports_turf_owner/screens/start/screen_register.dart';
 import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
