@@ -1,5 +1,5 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
-import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
+import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
 import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
 import 'package:dream_sports_turf_owner/widgets/register_widget.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +54,10 @@ class LoginScreen extends StatelessWidget {
                     fixedSize:
                         Size(mediaquery.width, mediaquery.height * 0.06)),
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => const TurfAddingScreen()));
                 },
                 child: const Text(
                   'Continue',

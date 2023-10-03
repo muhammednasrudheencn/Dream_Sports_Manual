@@ -1,3 +1,4 @@
+import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 Widget fieldtext(String childtext) {
@@ -5,7 +6,10 @@ Widget fieldtext(String childtext) {
     alignment: Alignment.centerLeft,
     child: Text(childtext,
         style: const TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 2)),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            letterSpacing: 2,
+            color: blackback)),
   );
 }
 
