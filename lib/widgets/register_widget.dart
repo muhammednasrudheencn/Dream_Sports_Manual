@@ -5,9 +5,8 @@ Widget textfield1({
   required TextEditingController controller,
   Icon? preicon,
   required String? hint,
-  var rtprint,
 }) {
-  return TextFormField(
+  return TextField(
     decoration: InputDecoration(
         filled: true,
         fillColor: whiteback,
@@ -20,13 +19,6 @@ Widget textfield1({
         prefixIcon: preicon,
         hintText: hint),
     controller: controller,
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return rtprint;
-      } else {
-        return null;
-      }
-    },
   );
 }
 

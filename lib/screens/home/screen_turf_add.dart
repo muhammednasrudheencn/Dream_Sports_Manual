@@ -1,15 +1,33 @@
+import 'dart:io';
+
 import 'package:dream_sports_turf_owner/constants/colors.dart';
-import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
+import 'package:dream_sports_turf_owner/services/firestore.dart';
+import 'package:dream_sports_turf_owner/services/log_service.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
-class TurfAddingScreen extends StatelessWidget {
+class TurfAddingScreen extends StatefulWidget {
   const TurfAddingScreen({Key? key}) : super(key: key);
 
+  @override
+  State<TurfAddingScreen> createState() => _TurfAddingScreenState();
+}
+
+class _TurfAddingScreenState extends State<TurfAddingScreen> {
+  File? _image;
+  String? downimag;
   @override
   Widget build(BuildContext context) {
     final mediaquery = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          userlogout(context);
+        },
+        child: Icon(Icons.logout),
+      ),
       backgroundColor: const Color.fromARGB(255, 243, 242, 242),
       body: SafeArea(
         child: Padding(
@@ -18,20 +36,38 @@ class TurfAddingScreen extends StatelessWidget {
             children: [
               Stack(children: [
                 Container(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   width: mediaquery.width,
                   height: mediaquery.height * 0.25,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
+                  child: _image == null
+                      ? const Center(child: Text('Loading'))
+                      : Container(
+                          width: mediaquery.width,
+                          height: mediaquery.height * 0.25,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              image: DecorationImage(
+                                  image: FileImage(_image!),
+                                  fit: BoxFit.cover)),
+                        ),
                 ),
                 IconButton(
                   onPressed: () {
                     showModalBottomSheet(
-                      context: context,
-                      builder: (context) =>
-                          imgbottom(height: mediaquery.height * 0.12),
-                    );
+                        context: context,
+                        isScrollControlled: true,
+                        showDragHandle: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(25),
+                          ),
+                        ),
+                        builder: (context) => imgbottom(
+                            height: mediaquery.height * 0.22,
+                            toheight: mediaquery.height * 0.06,
+                            towidth: mediaquery.width));
                   },
                   icon: const Icon(
                     Icons.edit,
@@ -92,7 +128,7 @@ class TurfAddingScreen extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () async {
-                  // Handle the selected image from the camera here
+                  uploadimage(downimage: downimag, image: _image);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: homecolor,
@@ -108,55 +144,107 @@ class TurfAddingScreen extends StatelessWidget {
   }
 
   getimage({required ImageSource sorce}) async {
-    final imagePicker = ImagePicker();
-    final pickedImage = await imagePicker.pickImage(source: sorce);
+    try {
+      final imagePicker = ImagePicker();
+      final pickedImage = await imagePicker.pickImage(source: sorce);
+      if (pickedImage == null) return null;
+      File? image = File(pickedImage.path);
+      image = await imgcrop(imagefile: image);
+      setState(() {
+        _image = image;
+        Navigator.pop(context);
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.pop(context);
+    }
   }
 
-  imgbottom({var width, var height}) {
-    return Padding(
-      padding: const EdgeInsets.all(.0),
-      child: Container(
-        width: width,
-        height: height,
-        margin: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fieldtext('Choose Profile Pic'),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    getimage(sorce: ImageSource.camera);
-                  },
-                  icon: const Icon(Icons.camera),
+  Future<File?> imgcrop({required File imagefile}) async {
+    CroppedFile? cropedimage =
+        await ImageCropper().cropImage(sourcePath: imagefile.path);
+    if (cropedimage == null) return null;
+    return File(cropedimage.path);
+  }
+
+  imgbottom({var width, var height, var toheight, var towidth}) {
+    return Container(
+      width: width,
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Choose Photo',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: Size(towidth, toheight),
+                    backgroundColor: whiteback,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                onPressed: () {
+                  getimage(sorce: ImageSource.camera);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera,
+                      color: blackback,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Use Camera',
+                      style: TextStyle(
+                          color: blackback, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 20),
-                IconButton(
-                  onPressed: () {
-                    getimage(sorce: ImageSource.gallery);
-                  },
-                  icon: const Icon(Icons.image),
-                )
-              ],
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Camera'),
-                SizedBox(width: 30),
-                Text('Gallery'),
-              ],
-            )
-          ],
-        ),
+              ),
+              const SizedBox(height: 5),
+              const Text('OR', style: TextStyle(fontSize: 15)),
+              const SizedBox(height: 5),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: Size(towidth, toheight),
+                    backgroundColor: whiteback,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                onPressed: () {
+                  getimage(sorce: ImageSource.gallery);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.photo,
+                      color: blackback,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Brouser Gallery',
+                      style: TextStyle(
+                          color: blackback, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20)
+            ],
+          ),
+        ],
       ),
     );
   }

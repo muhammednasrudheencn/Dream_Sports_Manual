@@ -1,6 +1,9 @@
+import 'package:dream_sports_turf_owner/bloc/splashbloc_bloc.dart';
 import 'package:dream_sports_turf_owner/screens/registeration/screen_register.dart';
+import 'package:dream_sports_turf_owner/screens/start/screen_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,10 +16,17 @@ class DreamSportsTurfOwners extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Play'),
-      debugShowCheckedModeBanner: false,
-      home: const RegisterScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SplashblocBloc()..add(InitialEvent()),
+        )
+      ],
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: 'Play'),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

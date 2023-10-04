@@ -21,7 +21,7 @@ class SignupScreen extends StatelessWidget {
             children: [
               Image(
                 image: const AssetImage(logo),
-                width: mediaquery.width * 0.3,
+                width: mediaquery.width * 0.6,
               ),
               const Text('Start With Dream Sports',
                   style: TextStyle(
