@@ -60,6 +60,7 @@ class SignupScreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (ctx) => OtpScreen(
                                     verify: verificationId,
+                                    phone: phonecontroller.text.trim(),
                                   )));
                     },
                     codeAutoRetrievalTimeout: (String verificationId) {},

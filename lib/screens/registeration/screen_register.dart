@@ -1,21 +1,35 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
+import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
 import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
 import 'package:dream_sports_turf_owner/services/firestore.dart';
 import 'package:dream_sports_turf_owner/services/log_service.dart';
 import 'package:dream_sports_turf_owner/widgets/register_widget.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  final String? phone;
+  const RegisterScreen({super.key, this.phone});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController usernamecontroller = TextEditingController();
+  TextEditingController phonecontroller = TextEditingController();
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController courtnamecontroller = TextEditingController();
+  TextEditingController locationcontroller = TextEditingController();
+  TextEditingController discriptioncontroller = TextEditingController();
+
+  @override
+  void initState() {
+    phonecontroller.text = widget.phone!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernamecontroller = TextEditingController();
-    TextEditingController phonecontroller = TextEditingController();
-    TextEditingController emailcontroller = TextEditingController();
-    TextEditingController courtnamecontroller = TextEditingController();
-    TextEditingController locationcontroller = TextEditingController();
-    TextEditingController discriptioncontroller = TextEditingController();
     // final formkey = GlobalKey<FormState>();
     final mediaquery = MediaQuery.of(context).size;
     return Scaffold(
@@ -37,9 +51,9 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 sheight,
                 textfield1(
-                  controller: phonecontroller,
-                  hint: 'Phone',
-                ),
+                    controller: phonecontroller,
+                    hint: 'Phone',
+                    type: TextInputType.phone),
                 sheight,
                 textfield1(
                   controller: emailcontroller,
@@ -77,10 +91,14 @@ class RegisterScreen extends StatelessWidget {
                         location: locationcontroller.text.trim(),
                         discription: discriptioncontroller.text.trim());
                     userlogin(context);
+                    // showsnackbar(
+                    //     context: context,
+                    //     content: 'Account Creating Success',
+                    //     color: Colors.green);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (ctx) => const TurfAddingScreen()));
+                            builder: (ctx) => const HomeScreen()));
                   },
                   child: const Text(
                     'Continue',

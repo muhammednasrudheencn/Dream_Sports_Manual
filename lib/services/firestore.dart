@@ -65,10 +65,10 @@ uploadimage({required String? downimage, required File? image}) async {
           () => showsnackbar(content: 'Image Uploaded'));
 }
 
-showsnackbar({BuildContext? context, required var content}) {
+showsnackbar({BuildContext? context, required var content, Color? color}) {
   ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
     content: Text(content),
-    backgroundColor: const Color.fromARGB(255, 9, 255, 0),
+    backgroundColor: color,
     margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).size.height - 100, right: 10, left: 10),
     behavior: SnackBarBehavior.floating,

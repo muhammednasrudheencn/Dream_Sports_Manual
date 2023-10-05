@@ -1,12 +1,13 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-Widget textfield1({
-  required TextEditingController controller,
-  Icon? preicon,
-  required String? hint,
-}) {
+Widget textfield1(
+    {required TextEditingController controller,
+    Icon? preicon,
+    required String? hint,
+    TextInputType? type}) {
   return TextField(
+    keyboardType: type,
     decoration: InputDecoration(
         filled: true,
         fillColor: whiteback,

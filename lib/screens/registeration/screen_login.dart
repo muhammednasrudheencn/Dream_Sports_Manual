@@ -1,11 +1,15 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
+import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
 import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
+import 'package:dream_sports_turf_owner/screens/registeration/screen_register.dart';
 import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
 import 'package:dream_sports_turf_owner/widgets/register_widget.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  String? phone;
+  LoginScreen({super.key, this.phone});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,14 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 238, 237, 237),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) => RegisterScreen(
+                        phone: phone,
+                      )));
+        },
         label: const Text(
           "Don't Have an Acount",
           style: TextStyle(color: blackback),
@@ -54,10 +65,8 @@ class LoginScreen extends StatelessWidget {
                     fixedSize:
                         Size(mediaquery.width, mediaquery.height * 0.06)),
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) => const TurfAddingScreen()));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (ctx) => const HomeScreen()));
                 },
                 child: const Text(
                   'Continue',

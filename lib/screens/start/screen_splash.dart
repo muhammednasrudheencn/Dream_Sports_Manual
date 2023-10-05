@@ -1,5 +1,6 @@
-import 'package:dream_sports_turf_owner/bloc/splashbloc_bloc.dart';
+import 'package:dream_sports_turf_owner/blocs/bloc/splashbloc_bloc.dart';
 import 'package:dream_sports_turf_owner/constants/colors.dart';
+import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
 import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
 import 'package:dream_sports_turf_owner/screens/start/screen_authentication.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       listener: (context, state) {
         if (state is NavigateToHome) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (ctx) => const TurfAddingScreen()));
+              MaterialPageRoute(builder: (ctx) => const HomeScreen()));
         } else if (state is NavigateToLogin) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (ctx) => SignupScreen()));

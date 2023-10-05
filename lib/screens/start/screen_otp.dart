@@ -1,5 +1,5 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
-import 'package:dream_sports_turf_owner/screens/registeration/screen_register.dart';
+import 'package:dream_sports_turf_owner/screens/registeration/screen_login.dart';
 import 'package:dream_sports_turf_owner/screens/start/screen_authentication.dart';
 import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
 
@@ -9,7 +9,8 @@ import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verify;
-  const OtpScreen({super.key, required this.verify});
+  final String? phone;
+  const OtpScreen({super.key, required this.verify, this.phone});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -46,9 +47,9 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               sheight,
               sheight,
-              const Text(
-                'Enter The Verification Code.\nSent To : 9875436578',
-                style: TextStyle(fontSize: 14, letterSpacing: 2),
+              Text(
+                'Enter The Verification Code.\nSent To : ${widget.phone}',
+                style: const TextStyle(fontSize: 14, letterSpacing: 2),
               ),
               const SizedBox(
                 height: 40,
@@ -108,7 +109,10 @@ class _OtpScreenState extends State<OtpScreen> {
 
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (ctx) => const RegisterScreen()),
+          MaterialPageRoute(
+              builder: (ctx) => LoginScreen(
+                    phone: widget.phone,
+                  )),
           (route) => false);
     } catch (e) {
       print('Wrong OTP');
