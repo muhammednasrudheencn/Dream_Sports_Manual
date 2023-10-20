@@ -130,6 +130,7 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                 onPressed: () async {
                   uploadimage(downimage: downimag, image: _image);
                   showsnackbar(content: 'Success', color: Colors.green);
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: homecolor,
