@@ -5,9 +5,11 @@ Widget textfield1(
     {required TextEditingController controller,
     Icon? preicon,
     required String? hint,
-    TextInputType? type}) {
+    TextInputType? type,
+    var length}) {
   return TextField(
     keyboardType: type,
+    maxLength: length,
     decoration: InputDecoration(
         filled: true,
         fillColor: whiteback,

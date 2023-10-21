@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:dream_sports_turf_owner/services/firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               StreamBuilder(
                 stream: store
-                    .collection('TurfOwner')
+                    .collection('TurfDetails')
                     .doc(auth.currentUser!.uid)
                     .collection('images')
                     .snapshots(),
@@ -31,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final url = snapshot.data!.docs[0]['turfimage'];
-                  return snapshot.hasData
+                  return url != null
                       ? Container(
                           width: mediaquery.width,
                           height: mediaquery.height * 0.25,
@@ -57,8 +55,8 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 10),
               StreamBuilder(
                   stream: store
-                      .collection('TurfOwner')
-                      .where('userid', isEqualTo: auth.currentUser!.uid)
+                      .collection('TurfDetails')
+                      .doc(auth.currentUser!.uid)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -67,49 +65,67 @@ class ProfileScreen extends StatelessWidget {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    final document = snapshot.data!.docs[0];
-                    final data = document.data();
-                    return Container(
-                      width: mediaquery.width,
-                      child: Card(
-                        semanticContainer: true,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        elevation: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                data['courtname'],
-                                style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1),
+
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+                    return data.isNotEmpty
+                        ? SizedBox(
+                            width: mediaquery.width,
+                            height: mediaquery.height * 0.20,
+                            child: Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                              Text(
-                                data['location'],
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 83, 83, 83),
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      data['courtname'],
+                                      style: const TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1),
+                                    ),
+                                    sheight,
+                                    Text(
+                                      data['location'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83),
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1),
+                                    ),
+                                    Text(
+                                      '+91 ${data['contactinfo']}',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83),
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1),
+                                    ),
+                                    Text(
+                                      data['discription'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83),
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1),
+                                    )
+                                  ],
+                                ),
                               ),
-                              Text(
-                                data['phone'],
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 83, 83, 83),
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                            ),
+                          )
+                        : const Center(
+                            child: Text('Loading'),
+                          );
                   })
             ],
           ),

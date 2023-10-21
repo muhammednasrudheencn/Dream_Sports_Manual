@@ -1,5 +1,4 @@
 import 'package:dream_sports_turf_owner/blocs/bloc/splashbloc_bloc.dart';
-import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
 import 'package:dream_sports_turf_owner/screens/start/screen_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

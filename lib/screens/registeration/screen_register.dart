@@ -1,6 +1,5 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
-import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
 import 'package:dream_sports_turf_owner/services/firestore.dart';
 import 'package:dream_sports_turf_owner/services/log_service.dart';
 import 'package:dream_sports_turf_owner/widgets/register_widget.dart';
@@ -18,9 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController usernamecontroller = TextEditingController();
   TextEditingController phonecontroller = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
-  TextEditingController courtnamecontroller = TextEditingController();
-  TextEditingController locationcontroller = TextEditingController();
-  TextEditingController discriptioncontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
 
   @override
   void initState() {
@@ -52,6 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 sheight,
                 textfield1(
                     controller: phonecontroller,
+                    length: 10,
                     hint: 'Phone',
                     type: TextInputType.phone),
                 sheight,
@@ -61,21 +59,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 sheight,
                 textfield1(
-                  controller: courtnamecontroller,
-                  hint: 'Court Name',
+                  controller: passwordcontroller,
+                  hint: 'Password',
                 ),
-                sheight,
-                textfield1(
-                  controller: locationcontroller,
-                  hint: 'Location',
-                ),
-                sheight,
-                textfielddiscription(
-                    controller: discriptioncontroller,
-                    hint: 'discription',
-                    width: mediaquery.width,
-                    height: mediaquery.height * 0.20,
-                    rtprint: 'Please Take Discription'),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -84,12 +70,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Size(mediaquery.width, mediaquery.height * 0.06)),
                   onPressed: () {
                     addtofirestore(
-                        username: usernamecontroller.text.trim(),
-                        phone: phonecontroller.text.trim(),
-                        email: emailcontroller.text.trim(),
-                        courtname: courtnamecontroller.text.trim(),
-                        location: locationcontroller.text.trim(),
-                        discription: discriptioncontroller.text.trim());
+                      username: usernamecontroller.text.trim(),
+                      phone: phonecontroller.text.trim(),
+                      email: emailcontroller.text.trim(),
+                      password: passwordcontroller.text.trim(),
+                    );
                     userlogin(context);
                     // showsnackbar(
                     //     context: context,

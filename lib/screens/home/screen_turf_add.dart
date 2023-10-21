@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:dream_sports_turf_owner/constants/colors.dart';
+import 'package:dream_sports_turf_owner/constants/methods.dart';
 import 'package:dream_sports_turf_owner/services/firestore.dart';
-import 'package:dream_sports_turf_owner/services/log_service.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,129 +16,204 @@ class TurfAddingScreen extends StatefulWidget {
 }
 
 class _TurfAddingScreenState extends State<TurfAddingScreen> {
+  final formkey = GlobalKey<FormState>();
   File? _image;
   String? downimag;
+  final courtnamecontroller = TextEditingController();
+  final locationcontroller = TextEditingController();
+  final discriptioncontroller = TextEditingController();
+  final contactcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mediaquery = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          userlogout(context);
-        },
-        child: Icon(Icons.logout),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     userlogout(context);
+      //   },
+      //   child: Icon(Icons.logout),
+      // ),
       backgroundColor: const Color.fromARGB(255, 243, 242, 242),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Stack(children: [
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  width: mediaquery.width,
-                  height: mediaquery.height * 0.25,
-                  child: _image == null
-                      ? const Center(child: Text('Loading'))
-                      : Container(
-                          width: mediaquery.width,
-                          height: mediaquery.height * 0.25,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              image: DecorationImage(
-                                  image: FileImage(_image!),
-                                  fit: BoxFit.cover)),
-                        ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        showDragHandle: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(25),
+          child: Form(
+            key: formkey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          showDragHandle: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(25),
+                            ),
                           ),
-                        ),
-                        builder: (context) => imgbottom(
-                            height: mediaquery.height * 0.22,
-                            toheight: mediaquery.height * 0.06,
-                            towidth: mediaquery.width));
-                  },
-                  icon: const Icon(
-                    Icons.edit,
-                    color: whiteback,
+                          builder: (context) => imgbottom(
+                              height: mediaquery.height * 0.22,
+                              toheight: mediaquery.height * 0.06,
+                              towidth: mediaquery.width));
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      width: mediaquery.width,
+                      height: mediaquery.height * 0.25,
+                      child: _image == null
+                          ? const Center(
+                              child: Text(
+                              'Tap To Add Your Turf Image',
+                              style: TextStyle(fontSize: 15),
+                            ))
+                          : Container(
+                              width: mediaquery.width,
+                              height: mediaquery.height * 0.25,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  image: DecorationImage(
+                                      image: FileImage(_image!),
+                                      fit: BoxFit.cover)),
+                            ),
+                    ),
                   ),
-                )
-              ]),
-              const SizedBox(height: 10), // Add appropriate spacing
-              TextFormField(
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: whiteback,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: whiteback),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                  const SizedBox(height: 10), // Add appropriate spacing
+                  TextFormField(
+                    controller: courtnamecontroller,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: whiteback,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: whiteback),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: homecolor),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      hintText: 'Court Name',
+                    ),
+                    //controller: controller,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter Court Name';
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: homecolor),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  sheight,
+                  TextFormField(
+                    controller: locationcontroller,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: whiteback,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: whiteback),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: homecolor),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      hintText: 'Location',
+                    ),
+                    //controller: controller,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter Court Name';
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
-                  hintText: 'Court Name',
-                ),
-                //controller: controller,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please Enter Court Name';
-                  } else {
-                    return null;
-                  }
-                },
+                  sheight,
+                  TextFormField(
+                    controller: contactcontroller,
+
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: whiteback,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: whiteback),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: homecolor),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      hintText: 'Contact Info',
+                    ),
+                    //controller: controller,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter Court Name';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10), // Add appropriate spacing
+                  TextFormField(
+                    controller: discriptioncontroller,
+                    minLines: 3,
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: whiteback,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: whiteback),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: homecolor),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      hintText: 'Court Description', // Change the hint text
+                    ),
+                    //controller: controller,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter Court Description'; // Update the validation message
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (formkey.currentState!.validate()) {
+                        uploadimage(downimage: downimag, image: _image);
+                        store
+                            .collection('TurfDetails')
+                            .doc(auth.currentUser!.uid)
+                            .set({
+                          'courtname': courtnamecontroller.text.trim(),
+                          'location': locationcontroller.text.trim(),
+                          'discription': discriptioncontroller.text.trim(),
+                          'contactinfo': contactcontroller.text.trim(),
+                          'userid': auth.currentUser!.uid,
+                        });
+                        addingSuccess(context, courtnamecontroller);
+                      } else {
+                        addingFailed(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: homecolor,
+                        fixedSize:
+                            Size(mediaquery.width, mediaquery.height * 0.06)),
+                    child: const Text('Submit'),
+                  )
+                ],
               ),
-              const SizedBox(height: 10), // Add appropriate spacing
-              TextFormField(
-                minLines: 3,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: whiteback,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: whiteback),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: homecolor),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  hintText: 'Court Description', // Change the hint text
-                ),
-                //controller: controller,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please Enter Court Description'; // Update the validation message
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () async {
-                  uploadimage(downimage: downimag, image: _image);
-                  showsnackbar(content: 'Success', color: Colors.green);
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: homecolor,
-                    fixedSize:
-                        Size(mediaquery.width, mediaquery.height * 0.06)),
-                child: const Text('Submit'),
-              )
-            ],
+            ),
           ),
         ),
       ),

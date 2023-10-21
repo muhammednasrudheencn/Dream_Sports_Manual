@@ -9,20 +9,16 @@ final auth = FirebaseAuth.instance;
 final store = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance;
 addtofirestore({
-  required String username,
-  required String phone,
-  required String email,
-  required String courtname,
-  required String location,
-  required String discription,
+  String? username,
+  String? phone,
+  String? email,
+  String? password,
 }) async {
   final Map<String, dynamic> userData = {
     'name': username,
     'phone': phone,
     'email': email,
-    'courtname': courtname,
-    'location': location,
-    'discription': discription,
+    'password': password,
     'userid': auth.currentUser!.uid,
   };
 
@@ -58,11 +54,11 @@ uploadimage({required String? downimage, required File? image}) async {
   downimage = await ref.getDownloadURL();
 
   await store
-      .collection('TurfOwner')
+      .collection('TurfDetails')
       .doc(auth.currentUser!.uid)
       .collection('images')
-      .add({'turfimage': downimage}).whenComplete(
-          () => showsnackbar(content: 'Image Uploaded'));
+      .doc(auth.currentUser!.uid)
+      .set({'turfimage': downimage});
 }
 
 showsnackbar({BuildContext? context, required var content, Color? color}) {
