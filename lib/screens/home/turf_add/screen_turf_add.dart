@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:dream_sports_turf_owner/constants/methods.dart';
 import 'package:dream_sports_turf_owner/services/firestore.dart';
+import 'package:dream_sports_turf_owner/widgets/const_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +19,9 @@ class TurfAddingScreen extends StatefulWidget {
 class _TurfAddingScreenState extends State<TurfAddingScreen> {
   final formkey = GlobalKey<FormState>();
   File? _image;
+  File? profile;
   String? downimag;
+  String? downimage;
   final courtnamecontroller = TextEditingController();
   final locationcontroller = TextEditingController();
   final discriptioncontroller = TextEditingController();
@@ -58,27 +61,65 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                               toheight: mediaquery.height * 0.06,
                               towidth: mediaquery.width));
                     },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      width: mediaquery.width,
-                      height: mediaquery.height * 0.25,
-                      child: _image == null
-                          ? const Center(
-                              child: Text(
-                              'Tap To Add Your Turf Image',
-                              style: TextStyle(fontSize: 15),
-                            ))
-                          : Container(
-                              width: mediaquery.width,
-                              height: mediaquery.height * 0.25,
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: FileImage(_image!),
-                                      fit: BoxFit.cover)),
-                            ),
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                              color: whiteback,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          width: mediaquery.width,
+                          height: mediaquery.height * 0.25,
+                          child: _image == null
+                              ? const Center(
+                                  child: Text(
+                                  'Tap To Add Your Turf Image',
+                                  style: TextStyle(fontSize: 15),
+                                ))
+                              : Container(
+                                  width: mediaquery.width,
+                                  height: mediaquery.height * 0.25,
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      image: DecorationImage(
+                                          image: FileImage(_image!),
+                                          fit: BoxFit.cover)),
+                                ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                showDragHandle: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25),
+                                  ),
+                                ),
+                                builder: (context) => profileselector(
+                                    height: mediaquery.height * 0.22,
+                                    toheight: mediaquery.height * 0.06,
+                                    towidth: mediaquery.width));
+                          },
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.grey,
+                            child: profile != null
+                                ? CircleAvatar(
+                                    radius: 39,
+                                    backgroundColor: whiteback,
+                                    backgroundImage: Image.file(profile!).image,
+                                  )
+                                : CircleAvatar(
+                                    radius: 39,
+                                    backgroundColor: whiteback,
+                                    backgroundImage: Image.network(user).image,
+                                  ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
 
@@ -126,7 +167,7 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                     //controller: controller,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please Enter Court Name';
+                        return 'Please Enter Location';
                       } else {
                         return null;
                       }
@@ -152,7 +193,7 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                     //controller: controller,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please Enter Court Name';
+                        return 'Please Enter Your contact info';
                       } else {
                         return null;
                       }
@@ -190,6 +231,7 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
                         uploadimage(downimage: downimag, image: _image);
+                        uploadavatar(downimage: downimage, profile: profile);
                         store
                             .collection('TurfDetails')
                             .doc(auth.currentUser!.uid)
@@ -229,6 +271,23 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
       image = await imgcrop(imagefile: image);
       setState(() {
         _image = image;
+        Navigator.pop(context);
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.pop(context);
+    }
+  }
+
+  getprofile({required ImageSource sorce}) async {
+    try {
+      final imagePicker = ImagePicker();
+      final pickedImage = await imagePicker.pickImage(source: sorce);
+      if (pickedImage == null) return null;
+      File? image = File(pickedImage.path);
+      image = await imgcrop(imagefile: image);
+      setState(() {
+        profile = image;
         Navigator.pop(context);
       });
     } on PlatformException catch (e) {
@@ -301,6 +360,88 @@ class _TurfAddingScreenState extends State<TurfAddingScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(30)))),
                 onPressed: () {
                   getimage(sorce: ImageSource.gallery);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.photo,
+                      color: blackback,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Brouser Gallery',
+                      style: TextStyle(
+                          color: blackback, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20)
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  profileselector({var width, var height, var toheight, var towidth}) {
+    return Container(
+      width: width,
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Choose Photo',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: Size(towidth, toheight),
+                    backgroundColor: whiteback,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                onPressed: () {
+                  getprofile(sorce: ImageSource.camera);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera,
+                      color: blackback,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Use Camera',
+                      style: TextStyle(
+                          color: blackback, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text('OR', style: TextStyle(fontSize: 15)),
+              const SizedBox(height: 5),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: Size(towidth, toheight),
+                    backgroundColor: whiteback,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                onPressed: () {
+                  getprofile(sorce: ImageSource.gallery);
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

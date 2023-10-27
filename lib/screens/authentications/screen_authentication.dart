@@ -1,5 +1,5 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
-import 'package:dream_sports_turf_owner/screens/start/screen_otp.dart';
+import 'package:dream_sports_turf_owner/screens/authentications/screen_otp.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

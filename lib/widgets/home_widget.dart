@@ -1,5 +1,5 @@
 import 'package:dream_sports_turf_owner/constants/colors.dart';
-import 'package:dream_sports_turf_owner/screens/home/screen_turf_add.dart';
+import 'package:dream_sports_turf_owner/screens/home/turf_add/screen_turf_add.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

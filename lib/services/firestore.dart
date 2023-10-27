@@ -61,6 +61,23 @@ uploadimage({required String? downimage, required File? image}) async {
       .set({'turfimage': downimage});
 }
 
+uploadavatar({required String? downimage, required File? profile}) async {
+  final postId = DateTime.now().millisecondsSinceEpoch.toString();
+  Reference ref = storage
+      .ref()
+      .child('${auth.currentUser!.uid}/Images')
+      .child('PostId$postId');
+  await ref.putFile(profile!);
+  downimage = await ref.getDownloadURL();
+
+  await store
+      .collection('TurfDetails')
+      .doc(auth.currentUser!.uid)
+      .collection('avatar')
+      .doc(auth.currentUser!.uid)
+      .set({'turfavatar': downimage});
+}
+
 showsnackbar({BuildContext? context, required var content, Color? color}) {
   ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
     content: Text(content),

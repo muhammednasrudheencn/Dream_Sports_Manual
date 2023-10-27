@@ -17,21 +17,28 @@ class LoginScreen extends StatelessWidget {
     final mediaquery = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 238, 237, 237),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (ctx) => RegisterScreen(
-                        phone: phone,
-                      )));
-        },
-        label: const Text(
-          "Don't Have an Acount",
-          style: TextStyle(color: blackback),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            "Dont Have An Account ?",
+            style: TextStyle(color: blackback),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => RegisterScreen(
+                            phone: phone,
+                          )));
+            },
+            child: const Text(
+              "Create Account",
+              style: TextStyle(color: blackback),
+            ),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Center(

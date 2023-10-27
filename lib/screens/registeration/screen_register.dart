@@ -76,14 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       password: passwordcontroller.text.trim(),
                     );
                     userlogin(context);
-                    // showsnackbar(
-                    //     context: context,
-                    //     content: 'Account Creating Success',
-                    //     color: Colors.green);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => const HomeScreen()));
+                    registerstatus();
                   },
                   child: const Text(
                     'Continue',
@@ -97,5 +90,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       )),
     );
+  }
+
+  registerstatus() {
+    if (usernamecontroller.text.trim().isEmpty ||
+        passwordcontroller.text.trim().isEmpty ||
+        phonecontroller.text.trim().isEmpty ||
+        emailcontroller.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Registeration Failed Please Check Your Field',
+            style: TextStyle(fontSize: 15)),
+        backgroundColor: Colors.red,
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        duration: Duration(seconds: 2),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          'Registeration Success',
+          style: TextStyle(fontSize: 15),
+        ),
+        backgroundColor: homecolor,
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        duration: Duration(seconds: 2),
+      ));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+    }
   }
 }

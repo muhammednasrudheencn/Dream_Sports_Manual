@@ -1,7 +1,7 @@
 import 'package:dream_sports_turf_owner/blocs/bloc/splashbloc_bloc.dart';
 import 'package:dream_sports_turf_owner/constants/colors.dart';
 import 'package:dream_sports_turf_owner/screens/home/screen_home.dart';
-import 'package:dream_sports_turf_owner/screens/start/screen_authentication.dart';
+import 'package:dream_sports_turf_owner/screens/authentications/screen_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
