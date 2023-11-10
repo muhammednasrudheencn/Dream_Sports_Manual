@@ -18,19 +18,19 @@ class chatbubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 13),
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
         decoration: BoxDecoration(
             color: color,
             borderRadius: senderid == auth.currentUser!.uid
                 ? const BorderRadius.only(
-                    topLeft: Radius.circular(6),
-                    topRight: Radius.circular(6),
-                    bottomLeft: Radius.circular(6),
+                    topLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(30),
                   )
                 : const BorderRadius.only(
-                    topLeft: Radius.circular(6),
-                    topRight: Radius.circular(6),
-                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(15),
                   )),
         child: Text(
           message,

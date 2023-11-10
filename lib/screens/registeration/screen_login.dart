@@ -9,11 +9,10 @@ import 'package:flutter/material.dart';
 class LoginScreen extends StatelessWidget {
   String? phone;
   LoginScreen({super.key, this.phone});
-
+  TextEditingController usernamecontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernamecontroller = TextEditingController();
-    TextEditingController passwordcontroller = TextEditingController();
     final mediaquery = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 238, 237, 237),
@@ -70,10 +69,7 @@ class LoginScreen extends StatelessWidget {
                     backgroundColor: homecolor,
                     fixedSize:
                         Size(mediaquery.width, mediaquery.height * 0.06)),
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (ctx) => const HomeScreen()));
-                },
+                onPressed: () {},
                 child: const Text(
                   'Continue',
                   style:
@@ -85,5 +81,37 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  userlogincheck(
+      {var password, var username, var phone, BuildContext? context}) {
+    if (passwordcontroller.text.trim() == password &&
+            usernamecontroller.text.trim() == username ||
+        usernamecontroller.text.trim() == phone) {
+      Navigator.pushReplacement(
+          context!, MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+    } else {
+      ScaffoldMessenger.of(context!).showSnackBar(const SnackBar(
+        content:
+            Text('Not Match Username,Password', style: TextStyle(fontSize: 15)),
+        backgroundColor: Colors.red,
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        duration: Duration(seconds: 2),
+      ));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            'If you Forgot Your Pass word , Please Create A new Account',
+            style: TextStyle(fontSize: 15)),
+        backgroundColor: Color.fromARGB(255, 94, 94, 94),
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 }
